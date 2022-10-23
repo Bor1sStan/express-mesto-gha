@@ -8,7 +8,9 @@ const getCards = (req, res) => {
   Card.find({})
     .populate('owner')
     .then((cards) => res.send({ cards }))
-    .catch(() => res.status(ERROR_CODE).send({ message: 'Произошла ошибка на сервере' }));
+    .catch(() => res
+      .status(ERROR_CODE)
+      .send({ message: 'Произошла ошибка на сервере' }));
 };
 
 const createCard = (req, res) => {
@@ -18,9 +20,11 @@ const createCard = (req, res) => {
     .then((card) => res.send({ card }))
     .catch((e) => {
       if (e.name === 'ValidationError') {
-        return res.status(ERROR_DATA_CODE).send({
-          message: 'Ошибка валидации. Переданные данные не корректны',
-        });
+        return res
+          .status(ERROR_DATA_CODE)
+          .send({
+            message: 'Ошибка валидации. Переданные данные не корректны',
+          });
       }
       return res
         .status(ERROR_CODE)
@@ -40,13 +44,13 @@ const deleteCard = (req, res) => {
     })
     .catch((e) => {
       if (e.name === 'CastError') {
-        return res.status(ERROR_DATA_CODE).send({
-          message: 'Ошибка валидациию Переданные данные не корректы',
-        });
+        return res
+          .status(ERROR_DATA_CODE)
+          .send({
+            message: 'Ошибка валидации. Переданные данные не корректны',
+          });
       }
-      return res
-        .status(ERROR_CODE)
-        .send({ message: 'Произошла ошибка на сервере' });
+      return res.status(ERROR_CODE).send({ message: 'Произошла ошибка на сервере' });
     });
 };
 
@@ -66,13 +70,13 @@ const likeCard = (req, res) => {
     })
     .catch((e) => {
       if (e.name === 'CastError' || e.name === 'ValidationError') {
-        return res.status(ERROR_DATA_CODE).send({
-          message: 'Ошибкавалидациию Переданные данные не корректны',
-        });
+        return res
+          .status(ERROR_DATA_CODE)
+          .send({
+            message: 'Ошибка валидации. Переданные данные не корректны',
+          });
       }
-      return res
-        .status(ERROR_CODE)
-        .send({ message: 'Произошла ошибка на сервере ' });
+      return res.status(ERROR_CODE).send({ message: 'Произошла ошибка на сервере' });
     });
 };
 
@@ -98,9 +102,7 @@ const dislikeCard = (req, res) => {
             message: 'Ошибка валидации. Переданные данные не корректны',
           });
       }
-      return res
-        .status(ERROR_CODE)
-        .send({ message: 'Произошла ошибка на сервере' });
+      return res.status(ERROR_CODE).send({ message: 'Произошла ошибка на сервере' });
     });
 };
 

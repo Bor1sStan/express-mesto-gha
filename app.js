@@ -1,33 +1,36 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const router = require('./routes');
+const bodyParser = require('body-parser');
+
+// const router = express.Router();
+const cardsRouter = require('./routes/cardsRouter');
+const usersRouter = require('./routes/usersRouter');
 
 const NOT_FOUND_CODE = 404;
 
 const { PORT = 3000 } = process.env;
 const app = express();
 
-// app.use((req, res, next) => {
-//   req.user = {
-//     _id: '36c0e76f0e695277fffa6ade',
-//   };
+mongoose.connect('mongodb://localhost:27017/mestodb');
 
-//   next();
-// });
+// router.use('/users', usersRouter);
+// router.use('/cards', cardsRouter);
 
-app.use('/', router);
+app.use(bodyParser.json());
+
+app.use((req, res, next) => {
+  req.user = {
+    _id: '63556a2f5f4b71e9cb563f6f',
+  };
+
+  next();
+});
+
+app.use('/cards', cardsRouter);
+app.use('/users', usersRouter);
+
 app.use((req, res) => {
   res.status(NOT_FOUND_CODE).send({ message: 'Страница не найдена' });
 });
 
-function main() {
-  mongoose.connect('mongodb://localhost:27017/mestodb', {
-    useNewUrlParser: true,
-    useUnifiedTopology: false,
-  });
-  app.listen(PORT);
-}
-
-main();
-
-// _id: "36c0e76f0e695277fffa6ade"  мой айди c прошлого проекта
+app.listen(PORT);

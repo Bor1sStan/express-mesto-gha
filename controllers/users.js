@@ -11,7 +11,7 @@ const getUsers = (req, res) => {
 };
 
 const getUserById = (req, res) => {
-  User.findById(req.paramsuserId)
+  User.findById(req.params.userId)
     .then((user) => {
       if (!user) {
         return res
@@ -22,9 +22,11 @@ const getUserById = (req, res) => {
     })
     .catch((e) => {
       if (e.name === 'CastError') {
-        return res.status(ERROR_DATA_CODE).send({
-          message: 'Ошибка валидации. Пареданные данные не корректны.',
-        });
+        return res
+          .status(ERROR_DATA_CODE)
+          .send({
+            message: 'Ошибка валидации. Переданные данные не корректны',
+          });
       }
       return res
         .status(ERROR_CODE)
@@ -39,9 +41,11 @@ const createUser = (req, res) => {
     .then((user) => res.send({ data: user }))
     .catch((e) => {
       if (e.name === 'ValidationError') {
-        return res.status(ERROR_DATA_CODE).send({
-          message: 'Ошибка валидации. Переданные данные не корректны',
-        });
+        return res
+          .status(ERROR_DATA_CODE)
+          .send({
+            message: 'Ошибка валидации. Переданные данные не корректны',
+          });
       }
       return res
         .status(ERROR_CODE)
@@ -51,12 +55,7 @@ const createUser = (req, res) => {
 
 const updateUserProfile = (req, res) => {
   const { name, about } = req.body;
-
-  User.findByIdAndUpdate(
-    req.user._id,
-    { name, about },
-    { new: true, runValidators: true },
-  )
+  User.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
     .then((user) => {
       if (!user) {
         return res
@@ -81,12 +80,7 @@ const updateUserProfile = (req, res) => {
 
 const updateUserAvatar = (req, res) => {
   const { avatar } = req.body;
-
-  User.findByIdAndUpdate(
-    req.user._id,
-    { avatar },
-    { new: true, runValidators: true },
-  )
+  User.findByIdAndUpdate(req.user._id, { avatar }, { new: true, runValidators: true })
     .then((user) => {
       if (!user) {
         return res
@@ -100,14 +94,12 @@ const updateUserAvatar = (req, res) => {
         return res
           .status(ERROR_DATA_CODE)
           .send({
-            message: 'Ошибка валидациии. Переданные данные не корректны',
+            message: 'Ошибка валидации. Переданные данные не корректны',
           });
       }
       return res
         .status(ERROR_CODE)
-        .send({
-          message: 'Произошла ошибка на сервере',
-        });
+        .send({ message: 'Произошла ошибка на сервере' });
     });
 };
 
