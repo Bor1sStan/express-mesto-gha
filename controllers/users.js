@@ -12,13 +12,13 @@ const getUsers = (req, res) => {
 
 const getUserById = (req, res) => {
   User.findById({ _id: req.params.userId })
+    // eslint-disable-next-line consistent-return
     .then((user) => {
+      // eslint-disable-next-line promise/always-return
       if (!user) {
-        return res
-          .status(NOT_FOUND_CODE)
-          .send({ message: 'Пользователь с таким id не найден' });
+        return res.status(ERROR_DATA_CODE).send({ message: 'Пользователь с таким id не найден' });
       }
-      return res.send(user);
+      res.send(user);
     })
     .catch((e) => {
       if (e.name === 'CastError') {
