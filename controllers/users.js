@@ -11,14 +11,14 @@ const getUsers = (req, res) => {
 };
 
 const getUserById = (req, res) => {
-  User.findById(req.params.userId)
+  User.findById({ _id: req.params.userId })
     .then((user) => {
       if (!user) {
         return res
           .status(NOT_FOUND_CODE)
-          .send({ message: 'Пользователь не найден' });
+          .send({ message: 'Пользователь с таким id не найден' });
       }
-      return res.send({ user });
+      return res.send(user);
     })
     .catch((e) => {
       if (e.name === 'CastError') {

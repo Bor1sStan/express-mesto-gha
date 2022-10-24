@@ -13,9 +13,6 @@ const app = express();
 
 mongoose.connect('mongodb://localhost:27017/mestodb');
 
-// router.use('/users', usersRouter);
-// router.use('/cards', cardsRouter);
-
 app.use(bodyParser.json());
 
 app.use((req, res, next) => {
