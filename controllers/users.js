@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const User = require('../models/user');
 
 const ERROR_CODE = 500;
@@ -11,16 +12,16 @@ const getUsers = (req, res) => {
 };
 
 const getUserById = (req, res) => {
-  const { id } = req.params;
-  // eslint-disable-next-line promise/catch-or-return
-  User.findById(id)
+  User.findById(req.params.id).orFail(new Error('NotFound'))
     .then((user) => res.send({ data: user }))
     .catch((err) => {
-      if (err.name === 'CastError') {
-        res.status(NOT_FOUND_CODE).send({ message: 'Пользователь не найден' });
-        return;
+      if (err.message === 'NotFound') {
+        return res.status(NOT_FOUND_CODE).send('Пользователь не найден');
       }
-      res.status(ERROR_CODE).send({ message: 'Произошла ошибка на сервере.' });
+      if (err instanceof mongoose.Error.CastError) {
+        return res.status(ERROR_DATA_CODE).send({ message: 'Не коректный id', err });
+      }
+      return res.status(ERROR_CODE).send({ message: 'На сервере произошла ошибка' });
     });
 };
 
