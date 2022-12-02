@@ -16,7 +16,7 @@ const getUserById = (req, res) => {
     .then((user) => {
       // eslint-disable-next-line promise/always-return
       if (!user) {
-        return res.status(ERROR_DATA_CODE).send({ message: 'Пользователь с таким id не найден' });
+        return res.status(NOT_FOUND_CODE).send({ message: 'Пользователь с таким id не найден' });
       }
       res.send(user);
     })
