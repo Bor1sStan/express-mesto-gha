@@ -16,17 +16,17 @@ const getUserById = (req, res) => {
     .then((user) => {
       // eslint-disable-next-line promise/always-return
       if (!user) {
-        return res.status(NOT_FOUND_CODE).send({ message: 'Пользователь с таким id не найден' });
+        return res
+          .status(NOT_FOUND_CODE)
+          .send({ message: 'Пользователь с таким id не найден' });
       }
       res.send(user);
     })
     .catch((e) => {
       if (e.name === 'CastError') {
-        return res
-          .status(ERROR_DATA_CODE)
-          .send({
-            message: 'Ошибка валидации. Переданные данные не корректны',
-          });
+        return res.status(ERROR_DATA_CODE).send({
+          message: 'Ошибка валидации. Переданные данные не корректны',
+        });
       }
       return res
         .status(ERROR_CODE)
@@ -41,11 +41,9 @@ const createUser = (req, res) => {
     .then((user) => res.send({ data: user }))
     .catch((e) => {
       if (e.name === 'ValidationError') {
-        return res
-          .status(ERROR_DATA_CODE)
-          .send({
-            message: 'Ошибка валидации. Переданные данные не корректны',
-          });
+        return res.status(ERROR_DATA_CODE).send({
+          message: 'Ошибка валидации. Переданные данные не корректны',
+        });
       }
       return res
         .status(ERROR_CODE)
@@ -55,7 +53,11 @@ const createUser = (req, res) => {
 
 const updateUserProfile = (req, res) => {
   const { name, about } = req.body;
-  User.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
+  User.findByIdAndUpdate(
+    req.user._id,
+    { name, about },
+    { new: true, runValidators: true },
+  )
     .then((user) => {
       if (!user) {
         return res
@@ -65,12 +67,10 @@ const updateUserProfile = (req, res) => {
       return res.send({ user });
     })
     .catch((e) => {
-      if (e.name === 'CastError' || e.name === 'ValidationError') {
-        return res
-          .status(ERROR_DATA_CODE)
-          .send({
-            message: 'Ошибка валидации. Переданные данные не корректны',
-          });
+      if (e.name === 'CastError" || e.name === "ValidationError') {
+        return res.status(ERROR_DATA_CODE).send({
+          message: 'Ошибка валидации. Переданные данные не корректны',
+        });
       }
       return res
         .status(ERROR_CODE)
@@ -80,7 +80,11 @@ const updateUserProfile = (req, res) => {
 
 const updateUserAvatar = (req, res) => {
   const { avatar } = req.body;
-  User.findByIdAndUpdate(req.user._id, { avatar }, { new: true, runValidators: true })
+  User.findByIdAndUpdate(
+    req.user._id,
+    { avatar },
+    { new: true, runValidators: true },
+  )
     .then((user) => {
       if (!user) {
         return res
@@ -91,11 +95,9 @@ const updateUserAvatar = (req, res) => {
     })
     .catch((e) => {
       if (e.name === 'CastError' || e.name === 'ValidationError') {
-        return res
-          .status(ERROR_DATA_CODE)
-          .send({
-            message: 'Ошибка валидации. Переданные данные не корректны',
-          });
+        return res.status(ERROR_DATA_CODE).send({
+          message: 'Ошибка валидации. Переданные данные не корректны',
+        });
       }
       return res
         .status(ERROR_CODE)
