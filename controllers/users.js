@@ -1,3 +1,4 @@
+const { default: mongoose } = require('mongoose');
 const User = require('../models/user');
 
 const ERROR_CODE = 500;
@@ -11,26 +12,16 @@ const getUsers = (req, res) => {
 };
 
 const getUserById = (req, res) => {
-  User.findById({ _id: req.params.userId })
-    // eslint-disable-next-line consistent-return
-    .then((user) => {
-      // eslint-disable-next-line promise/always-return
-      if (!user) {
-        return res
-          .status(NOT_FOUND_CODE)
-          .send({ message: 'Пользователь с таким id не найден' });
+  User.findById(req.params.userId).orFail(new Error('NotFound'))
+    .then((user) => res.send(user))
+    .catch((err) => {
+      if (err.message === 'NotFound') {
+        return res.status(NOT_FOUND_CODE).send({ message: 'Пользователь не найден' });
       }
-      res.send(user);
-    })
-    .catch((e) => {
-      if (e.name === 'CastError') {
-        return res.status(ERROR_DATA_CODE).send({
-          message: 'Ошибка валидации. Переданные данные не корректны',
-        });
+      if (err instanceof mongoose.Error.CastError) {
+        return res.status(ERROR_DATA_CODE).send({ message: 'Некоректный id' });
       }
-      return res
-        .status(ERROR_CODE)
-        .send({ message: 'Произошла ошибка на сервере' });
+      return res.status(ERROR_CODE).send({ message: 'На сервере произошла ошибка' });
     });
 };
 
