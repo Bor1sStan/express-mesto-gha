@@ -15,7 +15,7 @@ const getUserById = (req, res) => {
   User.findById(req.params.userId)
     .then((user) => {
       if (!user) {
-        return res.status(NOT_FOUND_CODE).send({ message: 'Пользователь не найден'});
+        return res.status(NOT_FOUND_CODE).send({ message: 'Пользователь не найден' });
       }
       return res.send({ data: user });
     })
