@@ -23,7 +23,7 @@ const getUserById = (req, res) => {
       if (err.name === 'CastError') {
         return res.status(ERROR_DATA_CODE).send({ message: 'Ошибка валидации. Переданные данные не корректны' });
       }
-      return res.status(ERROR_DATA_CODE).send({ message: 'Произошла ошибка на сервере' });
+      return res.status(ERROR_CODE).send({ message: 'Произошла ошибка на сервере' });
     });
 };
 
