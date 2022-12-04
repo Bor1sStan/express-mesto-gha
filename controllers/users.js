@@ -43,7 +43,7 @@ const createUser = (req, res) => {
 };
 
 // eslint-disable-next-line consistent-return
-const updateUser = async (req, res) => {
+const updateUserProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
     if (!user) {
@@ -62,7 +62,7 @@ const updateUser = async (req, res) => {
 };
 
 // eslint-disable-next-line consistent-return
-const updateAvatar = async (req, res) => {
+const updateUserAvatar = async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
     if (!user) {
@@ -84,6 +84,6 @@ module.exports = {
   getUsers,
   getUserById,
   createUser,
-  updateUser,
-  updateAvatar,
+  updateUserProfile,
+  updateUserAvatar,
 };
