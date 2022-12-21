@@ -12,7 +12,7 @@ const {
 const getUsers = (req, res) => {
   User.find({})
     .then((users) => res.send(users))
-    .catch(() => res.status(500).send({ message: 'Произошла ошибка на сервере' }));
+    .catch(() => res.status(ERROR_CODE).send({ message: ERROR_CODE_MESSAGE }));
 };
 
 const getUserById = (req, res) => {
@@ -53,7 +53,7 @@ const updateUserProfile = (req, res) => {
       return res.send({ user });
     })
     .catch((e) => {
-      if (e.name === 'CastError' || e.name === 'ValidationError') {
+      if (e.name === 'ValidationError') {
         return res.status(ERROR_DATA_CODE).send({ message: ERROR_DATA_CODE });
       }
       return res.status(ERROR_CODE).send({ message: ERROR_CODE_MESSAGE });
@@ -70,7 +70,7 @@ const updateUserAvatar = (req, res) => {
       return res.send({ user });
     })
     .catch((err) => {
-      if (err.name === 'CastError' || err.name === 'ValidationError') {
+      if (err.name === 'ValidationError') {
         return res.status(ERROR_DATA_CODE).send({ message: ERROR_DATA_CODE_MESSAGE });
       }
       return res.status(ERROR_CODE).send({ message: ERROR_CODE_MESSAGE });
