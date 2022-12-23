@@ -52,8 +52,8 @@ const updateUserProfile = (req, res) => {
       }
       return res.send({ user });
     })
-    .catch((e) => {
-      if (e.name === 'ValidationError') {
+    .catch((err) => {
+      if (err.name === 'CastError' || err.name === 'ValidationError') {
         return res.status(ERROR_DATA_CODE).send({ message: ERROR_DATA_CODE });
       }
       return res.status(ERROR_CODE).send({ message: ERROR_CODE_MESSAGE });
@@ -70,7 +70,7 @@ const updateUserAvatar = (req, res) => {
       return res.send({ user });
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err.name === 'CastError' || err.name === 'ValidationError') {
         return res.status(ERROR_DATA_CODE).send({ message: ERROR_DATA_CODE_MESSAGE });
       }
       return res.status(ERROR_CODE).send({ message: ERROR_CODE_MESSAGE });
