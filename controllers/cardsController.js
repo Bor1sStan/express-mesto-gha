@@ -1,4 +1,4 @@
-const Card = require('../models/card');
+const Card = require('../models/cardModel');
 const {
   ERROR_CODE,
   NOT_FOUND_CODE,
