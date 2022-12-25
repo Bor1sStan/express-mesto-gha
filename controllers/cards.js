@@ -61,8 +61,8 @@ const likeCard = (req, res) => {
     .then((card) => {
       if (!card) {
         return res
-          .status(NOT_FOUND_CODE)
-          .send({ message: NOT_FOUND_CODE_CARD_MESSAGE });
+          .status(ERROR_DATA_CODE)
+          .send({ message: ERROR_DATA_CODE_MESSAGE });
       }
       return Card.findByIdAndUpdate(
         req.params.cardId,
@@ -85,8 +85,8 @@ const dislikeCard = (req, res) => {
     .then((card) => {
       if (!card) {
         return res
-          .status(NOT_FOUND_CODE)
-          .send({ message: NOT_FOUND_CODE_CARD_MESSAGE });
+          .status(ERROR_DATA_CODE)
+          .send({ message: ERROR_DATA_CODE_MESSAGE });
       }
       return Card.findByIdAndUpdate(
         req.params.cardId,
