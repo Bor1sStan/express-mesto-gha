@@ -69,9 +69,7 @@ const likeCard = (req, res) => {
         { $addToSet: { likes: req.user._id } },
         { new: true },
       )
-        // eslint-disable-next-line promise/no-nesting
         .then((newCard) => res.send(newCard))
-        // eslint-disable-next-line promise/no-nesting
         .catch(() => res.status(ERROR_CODE).send({ message: ERROR_CODE_MESSAGE }));
     })
     .catch((err) => {
@@ -95,9 +93,7 @@ const dislikeCard = (req, res) => {
         { $pull: { likes: req.user._id } },
         { new: true },
       )
-        // eslint-disable-next-line promise/no-nesting
         .then((newCard) => res.send(newCard))
-        // eslint-disable-next-line promise/no-nesting
         .catch(() => res.status(ERROR_CODE).send({ message: ERROR_CODE_MESSAGE }));
     })
     .catch((err) => {

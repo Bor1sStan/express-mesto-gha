@@ -48,15 +48,15 @@ const updateUserProfile = (req, res) => {
   User.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
     .then((user) => {
       if (!user) {
-        return res.status(NOT_FOUND_CODE).send({ message: 'Пользователь не найден' });
+        return res.status(NOT_FOUND_CODE).send({ message: NOT_FOUND_CODE_USER_MESSAGE });
       }
       return res.send({ user });
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        return res.status(ERROR_DATA_CODE).send({ message: 'Ошибка валидации. Переданные данные не корректны' });
+        return res.status(ERROR_DATA_CODE).send({ message: ERROR_DATA_CODE_MESSAGE });
       }
-      return res.status(ERROR_CODE).send({ message: 'Произошла ошибка на сервере' });
+      return res.status(ERROR_CODE).send({ message: ERROR_CODE_MESSAGE });
     });
 };
 
@@ -65,15 +65,15 @@ const updateUserAvatar = (req, res) => {
   User.findByIdAndUpdate(req.user._id, { avatar }, { new: true, runValidators: true })
     .then((user) => {
       if (!user) {
-        return res.status(NOT_FOUND_CODE).send({ message: 'Пользователь не найден' });
+        return res.status(NOT_FOUND_CODE).send({ message: NOT_FOUND_CODE_USER_MESSAGE });
       }
       return res.send({ user });
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        return res.status(ERROR_DATA_CODE).send({ message: 'Ошибка валидации. Переданные данные не корректны' });
+        return res.status(ERROR_DATA_CODE).send({ message: ERROR_DATA_CODE_MESSAGE });
       }
-      return res.status(ERROR_CODE).send({ message: 'Произошла ошибка на сервере' });
+      return res.status(ERROR_CODE).send({ message: ERROR_CODE_MESSAGE });
     });
 };
 
