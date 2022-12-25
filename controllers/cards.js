@@ -1,4 +1,3 @@
-/* eslint-disable promise/always-return */
 const Card = require('../models/card');
 const {
   ERROR_CODE,
@@ -8,7 +7,7 @@ const {
   ERROR_CODE_MESSAGE,
   ERROR_DATA_CODE_MESSAGE,
   NOT_FOUND_CODE_CARD_MESSAGE,
-  NOT_FOUND_CODE_PAGE_MESSAGE,
+  // NOT_FOUND_CODE_PAGE_MESSAGE,
 } = require('../units/constants');
 
 const getCards = (req, res) => {
@@ -61,10 +60,11 @@ const likeCard = (req, res) => {
   Card.findById(req.params.cardId)
     .then((card) => {
       if (!card) {
-        res.status(NOT_FOUND_CODE).send({ message: NOT_FOUND_CODE_PAGE_MESSAGE });
-        return;
+        return res
+          .status(NOT_FOUND_CODE)
+          .send({ message: NOT_FOUND_CODE_CARD_MESSAGE });
       }
-      Card.findByIdAndUpdate(
+      return Card.findByIdAndUpdate(
         req.params.cardId,
         { $addToSet: { likes: req.user._id } },
         { new: true },
@@ -74,10 +74,9 @@ const likeCard = (req, res) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(ERROR_DATA_CODE).send({ message: ERROR_DATA_CODE_MESSAGE });
-        return;
+        return res.status(NOT_FOUND_CODE).send({ message: NOT_FOUND_CODE_CARD_MESSAGE });
       }
-      res.status(ERROR_CODE).send({ message: ERROR_CODE_MESSAGE });
+      return res.status(ERROR_CODE).send({ message: ERROR_CODE_MESSAGE });
     });
 };
 
@@ -85,10 +84,11 @@ const dislikeCard = (req, res) => {
   Card.findById(req.params.cardId)
     .then((card) => {
       if (!card) {
-        res.status(NOT_FOUND_CODE).send({ message: NOT_FOUND_CODE_CARD_MESSAGE });
-        return;
+        return res
+          .status(NOT_FOUND_CODE)
+          .send({ message: NOT_FOUND_CODE_CARD_MESSAGE });
       }
-      Card.findByIdAndUpdate(
+      return Card.findByIdAndUpdate(
         req.params.cardId,
         { $pull: { likes: req.user._id } },
         { new: true },
@@ -98,47 +98,11 @@ const dislikeCard = (req, res) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(ERROR_DATA_CODE).send({ message: ERROR_DATA_CODE_MESSAGE });
-        return;
+        return res.status(NOT_FOUND_CODE).send({ message: NOT_FOUND_CODE_CARD_MESSAGE });
       }
-      res.status(ERROR_CODE).send({ message: ERROR_CODE_MESSAGE });
+      return res.status(ERROR_CODE).send({ message: ERROR_CODE_MESSAGE });
     });
 };
-
-// const likeCard = (req, res) => {
-//   Card.findByIdAndUpdate(
-//     req.params.cardId,
-//     { $addToSet: { likes: req.user._id } },
-//     { new: true },
-//   )
-//     .then((card) => {
-//       if (!card) {
-//         return res
-//           .status(NOT_FOUND_CODE)
-//           .send({ message: NOT_FOUND_CODE_CARD_MESSAGE });
-//       }
-//       return res.send({ card });
-//     })
-//     .catch(() => res.status(ERROR_CODE).send({ message: ERROR_CODE_MESSAGE }));
-// };
-
-// const dislikeCard = (req, res) => {
-//   Card.findByIdAndUpdate(
-//     req.params.cardId,
-//     { $pull: { likes: req.user._id } },
-//     { new: true },
-//   )
-//     .then((card) => {
-//       if (!card) {
-//         return res
-//           .status(NOT_FOUND_CODE)
-//           .send({ message: NOT_FOUND_CODE_CARD_MESSAGE });
-//       }
-//       return res.send({ card });
-//     })
-//     .catch(() => res.status(ERROR_CODE).send({ message: ERROR_DATA_CODE_MESSAGE }));
-// };
-//   ------ старая версия ------
 
 module.exports = {
   getCards,
