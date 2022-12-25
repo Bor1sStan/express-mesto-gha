@@ -7,7 +7,6 @@ const {
   ERROR_CODE_MESSAGE,
   ERROR_DATA_CODE_MESSAGE,
   NOT_FOUND_CODE_CARD_MESSAGE,
-  // NOT_FOUND_CODE_PAGE_MESSAGE,
 } = require('../units/constants');
 
 const getCards = (req, res) => {
@@ -61,8 +60,8 @@ const likeCard = (req, res) => {
     .then((card) => {
       if (!card) {
         return res
-          .status(ERROR_DATA_CODE)
-          .send({ message: ERROR_DATA_CODE_MESSAGE });
+          .status(NOT_FOUND_CODE)
+          .send({ message: NOT_FOUND_CODE_CARD_MESSAGE });
       }
       return Card.findByIdAndUpdate(
         req.params.cardId,
@@ -74,7 +73,7 @@ const likeCard = (req, res) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        return res.status(NOT_FOUND_CODE).send({ message: NOT_FOUND_CODE_CARD_MESSAGE });
+        return res.status(ERROR_DATA_CODE).send({ message: ERROR_DATA_CODE_MESSAGE });
       }
       return res.status(ERROR_CODE).send({ message: ERROR_CODE_MESSAGE });
     });
@@ -85,8 +84,8 @@ const dislikeCard = (req, res) => {
     .then((card) => {
       if (!card) {
         return res
-          .status(ERROR_DATA_CODE)
-          .send({ message: ERROR_DATA_CODE_MESSAGE });
+          .status(NOT_FOUND_CODE)
+          .send({ message: NOT_FOUND_CODE_CARD_MESSAGE });
       }
       return Card.findByIdAndUpdate(
         req.params.cardId,
@@ -98,7 +97,7 @@ const dislikeCard = (req, res) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        return res.status(NOT_FOUND_CODE).send({ message: NOT_FOUND_CODE_CARD_MESSAGE });
+        return res.status(ERROR_DATA_CODE).send({ message: ERROR_DATA_CODE_MESSAGE });
       }
       return res.status(ERROR_CODE).send({ message: ERROR_CODE_MESSAGE });
     });
