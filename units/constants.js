@@ -6,7 +6,6 @@ const SUCCES_CREATE_CODE = 201;
 const ERROR_CODE_MESSAGE = 'Произошла ошибка на сервере';
 const NOT_FOUND_CODE_USER_MESSAGE = 'Пользователь не найден';
 const NOT_FOUND_CODE_CARD_MESSAGE = 'Карточка не найдена';
-const NOT_FOUND_CODE_PAGE_MESSAGE = 'Страница не найдена';
 const ERROR_DATA_CODE_MESSAGE = 'Ошибка валидации. Переданные данные не корректны';
 
 module.exports = {
@@ -17,6 +16,5 @@ module.exports = {
   ERROR_CODE_MESSAGE,
   NOT_FOUND_CODE_USER_MESSAGE,
   NOT_FOUND_CODE_CARD_MESSAGE,
-  NOT_FOUND_CODE_PAGE_MESSAGE,
   ERROR_DATA_CODE_MESSAGE,
 };
