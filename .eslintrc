@@ -1,9 +1,15 @@
 {
+  "env": {
+    "browser": true,
+    "commonjs": true,
+    "es2021": true
+  },
   "extends": [
-    "airbnb-base",
-    "plugin:ternary/recommended",
-    "plugin:promise/recommended"
+    "airbnb-base"
   ],
+  "parserOptions": {
+    "ecmaVersion": "latest"
+  },
   "rules": {
     "no-unexpected-multiline": "error",
     "no-underscore-dangle":
