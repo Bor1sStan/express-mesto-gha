@@ -5,7 +5,7 @@ const auth = require('../middlewares/authMiddleware');
 const usersRouter = require('./usersRouter');
 const cardsRouter = require('./cardsRouter');
 
-const NotFoundCodeError = require('../errors/notFoundCodeError');
+const NotFoundCodeError = require('../errors/notFoundError');
 
 router.post('/signin', validateLoginData, userController.login);
 router.post('/signup', validateRegisterData, userController.createUser);

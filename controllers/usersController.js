@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/userModel');
 
 const { ErrorCode } = require('../errors/errorCode');
-const { NotFoundCodeError } = require('../errors/notFoundCodeError');
+const { NotFoundError } = require('../errors/notFoundError');
 const { ConflictEmailError } = require('../errors/conflictEmailError');
 
 const {
@@ -19,11 +19,20 @@ const getUsers = (req, res, next) => {
     .catch(next);
 };
 
+const getProfile = (req, res, next) => {
+  User.findOne({ _id: req.user._id })
+    .orFail(() => {
+      next(new NotFoundError(NOT_FOUND_CODE_USER_MESSAGE));
+    })
+    .then((user) => res.send({ data: user }))
+    .catch(next);
+};
+
 const getUserById = (req, res, next) => {
   User.findOne({ _id: req.params.id })
     .then((user) => {
       if (!user) {
-        throw new NotFoundCodeError(NOT_FOUND_CODE_USER_MESSAGE);
+        throw new NotFoundError(NOT_FOUND_CODE_USER_MESSAGE);
       }
       res.send(user);
     })
@@ -36,25 +45,26 @@ const getUserById = (req, res, next) => {
     });
 };
 
-const createUser = async (req, res, next) => {
+const createUser = (req, res, next) => {
   const {
     name, about, avatar, email, password,
   } = req.body;
-  try {
-    const hash = await bcrypt.hash(password, 10);
-    const newUser = await User.create({
-      name, about, avatar, email, password: hash,
+
+  const hash = bcrypt.hash(password, 10);
+  User.create({
+    name, about, avatar, email, password: hash,
+  }).then((user) => {
+    res.status(SUCCES_CREATE_CODE).send({ data: user });
+  })
+    .catch((err) => {
+      if (err.code === 11000) {
+        next(new ConflictEmailError(NOT_FOUND_CODE_EMAIL_MESSAGE));
+      } else if (err.name === 'ValidationError') {
+        next(new ErrorCode(ERROR_CODE_MESSAGE));
+      } else {
+        next(err);
+      }
     });
-    res.status(SUCCES_CREATE_CODE).send(newUser);
-  } catch (err) {
-    if (err.code === 11000) {
-      next(new ConflictEmailError(NOT_FOUND_CODE_EMAIL_MESSAGE));
-    } else if (err.name === 'ValidationError') {
-      next(new ErrorCode(ERROR_CODE_MESSAGE));
-    } else {
-      next(err);
-    }
-  }
 };
 
 const login = (req, res, next) => {
@@ -62,9 +72,7 @@ const login = (req, res, next) => {
   return User.findUser(email, password)
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, JWT, { expiresIn: '7d' });
-      if (!user) {
-        return new NotFoundCodeError(NOT_FOUND_CODE_USER_MESSAGE);
-      }
+
       return res.cookie('token', token, {
         maxAge: 3600000,
         httpOnly: true,
@@ -72,11 +80,7 @@ const login = (req, res, next) => {
       }).send({ email });
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
-        next(new ErrorCode(err.message));
-      } else {
-        next(err);
-      }
+      next(err);
     });
 };
 
@@ -94,7 +98,10 @@ const updateUser = (req, res, next, userData) => {
     },
   )
     .then((user) => {
-      res.send(user);
+      if (!user) {
+        return new NotFoundError(NOT_FOUND_CODE_USER_MESSAGE);
+      }
+      return res.send(user);
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -120,18 +127,10 @@ const updateUserAvatar = (req, res, next) => {
   updateUser(req, res, next, userData);
 };
 
-const getProfile = (req, res, next) => {
-  const userData = {
-    name: req.body.name,
-    about: req.body.about,
-  };
-  updateUser(req, res, next, userData);
-};
-
 module.exports = {
   getUsers,
-  getUserById,
   getProfile,
+  getUserById,
   createUser,
   updateUser,
   updateUserInfo,

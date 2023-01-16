@@ -8,12 +8,11 @@ const {
   FORBIDDEN_ERROR_CARD_MESSAGE,
 } = require('../units/constants');
 const { ErrorCode } = require('../errors/errorCode');
-const { ServerErrorCode } = require('../errors/serverErrorCode');
-const { NotFoundCodeError } = require('../errors/notFoundCodeError');
+const { NotFoundError } = require('../errors/notFoundError');
 const { ForbiddenError } = require('../errors/forbiddenError');
 
 const getCards = (req, res, next) => {
-  Card.find({}).then((cards) => res.send({ cards }))
+  Card.find({}).populate('owner').then((cards) => res.send({ cards }))
     .catch(next);
 };
 
@@ -26,7 +25,7 @@ const createCard = (req, res, next) => {
       if (err.name === 'ValidationError') {
         next(new ErrorCode(ERROR_CODE_MESSAGE));
       } else {
-        next(new ServerErrorCode(SERVER_ERROR_CODE_MESSAGE));
+        next(err);
       }
     });
 };
@@ -35,7 +34,7 @@ const deleteCard = (req, res, next) => {
   Card.findById(req.params.cardId)
     .then((card) => {
       if (!card) {
-        throw new NotFoundCodeError(NOT_FOUND_CODE_USER_MESSAGE);
+        throw new NotFoundError(NOT_FOUND_CODE_USER_MESSAGE);
       } if (card.owner.toString() !== req.user._id) {
         throw new ForbiddenError(FORBIDDEN_ERROR_CARD_MESSAGE);
       }
@@ -58,12 +57,9 @@ const likeCard = (req, res, next) => {
     { $addToSet: { likes: req.user._id } },
     { new: true },
   )
-    .orFail(() => new NotFoundCodeError(NOT_FOUND_CODE_USER_MESSAGE))
+    .orFail(() => new NotFoundError(NOT_FOUND_CODE_USER_MESSAGE))
     .then((card) => {
-      if (!card) {
-        return next(new NotFoundCodeError(NOT_FOUND_CODE_CARD_MESSAGE));
-      }
-      return res.send({ card, message: 'Лайк поставлен' });
+      res.send({ card, message: 'Лайк поставлен' });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -80,12 +76,9 @@ const dislikeCard = (req, res, next) => {
     { $pull: { likes: req.user._id } },
     { new: true },
   )
-    .orFail(() => new NotFoundCodeError(NOT_FOUND_CODE_USER_MESSAGE))
+    .orFail(() => new NotFoundError(NOT_FOUND_CODE_USER_MESSAGE))
     .then((card) => {
-      if (!card) {
-        return next(new NotFoundCodeError(NOT_FOUND_CODE_CARD_MESSAGE));
-      }
-      return res.send({ card, message: 'Лайк удален' });
+      res.send({ card, message: 'Лайк удален' });
     })
     .catch((err) => {
       if (err.name === 'CastError') {

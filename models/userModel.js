@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const validator = require('validator');
-const UnauthorixedErrorCode = require('../errors/unauthorixedErrorCode');
+const UnauthorixedErrorCode = require('../errors/unauthorixedError');
 const {
   WRONG_EMAIL_OR_PASSWORD_MESSAGE,
 } = require('../units/constants');
@@ -9,21 +9,18 @@ const {
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true,
     minlength: [2, 'минимальное кол-во символов 2'],
     maxlength: [30, 'максимальное кол-во символов 30'],
     default: 'Жак-Ив Кусто',
   },
   about: {
     type: String,
-    required: true,
     minlength: [2, 'минимальное кол-во символов 2'],
     maxlength: [30, 'максимальное кол-во символов 30'],
     default: 'Исследователь',
   },
   avatar: {
     type: String,
-    required: true,
     validate: {
       validator: (v) => validator.isURL(v, { protocols: ['http', 'https'], require_protocol: true }),
       message: ({ value }) => `${value} - некоректный фдрес URL. Ожидается адрес в формате: http(s)://(www).site.com`,
@@ -42,7 +39,6 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true,
-    minlength: 8,
     select: false,
   },
 }, { toObject: { useProjection: true }, toJSON: { useProjection: true } });
